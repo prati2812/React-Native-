@@ -1,40 +1,25 @@
 import React, { Component, useEffect, useState } from 'react';
-import { Text, View, TextInput, Button, FlatList, StyleSheet, ScrollView, SectionList, useWindowDimensions, TouchableHighlight, TouchableOpacity, ActivityIndicator, Platform, Modal } from 'react-native';
+import { Text, View, TextInput, Button, FlatList, StyleSheet, ScrollView, SectionList, useWindowDimensions, TouchableHighlight, TouchableOpacity, ActivityIndicator, Platform, Modal, StatusBar } from 'react-native';
 import style from './styles/style';
 import SplashScreen from 'react-native-splash-screen';
 
 const App = () => {
- 
-  const [showModal, setModal] = useState(false);
-  const [showOpenBtn , setStatusBtn] = useState(true);
-
+  
+  const [hidden , setHiddenStatus] = useState(true);
+  const [changeText , setText] = useState('Statusbar Show');
   useEffect(()=>{
-    if(showModal == false){
-      setStatusBtn(true);
-    }
-    else{
-      setStatusBtn(false);
-    }
-    
-  } , [showModal])
-
+     if(hidden == true){
+       setText('Statusbar show');
+     }
+     else{
+       setText('Statusbar hide');
+     }
+  },[hidden])
   return(
        <View style={style.main}>
-        <Modal transparent={true} visible={showModal} animationType='slide'>
-          <View style={style.centerView}>
-             <View style={style.modelView}>
-                    <Text style={style.modalText}>Hello World</Text>
-                    <Button title='Close Model' onPress={() => setModal(false)}/>
-             </View>
-          </View>
-          
-        </Modal>
-
-        <View style={style.btnView}>
-          {
-             showOpenBtn== true ? <Button  title='Open Modal' onPress={()=> setModal(true)}/> : null     
-          }
-        
+        <StatusBar hidden={hidden} backgroundColor={'green'}></StatusBar>
+        <View style={style.centerView}>
+        <Button title={changeText} onPress={()=> setHiddenStatus(!hidden)}/>
         </View>
        </View>     
   )
