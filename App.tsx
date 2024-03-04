@@ -7,16 +7,7 @@ const App = () => {
   
     return(
         <View>
-             <Pressable 
-              onPress={() => console.warn("onPress Event Occured")}
-              onLongPress={()=> console.warn("LongPress Event Occured")}
-              onPressIn={() => console.warn("onPressIn Event Occured")}
-              onPressOut={() => console.warn("onPressOut Event Occured")}
-              >
-                   <Text style={style.btn}>
-                        Pressable Event
-                   </Text>
-             </Pressable>
+             <Text style={style.modalText}>Platform OS is {Platform.OS}</Text>
         </View> 
     )  
  
