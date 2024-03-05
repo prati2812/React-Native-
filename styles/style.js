@@ -13,7 +13,7 @@ export default styles = StyleSheet.create({
         borderColor:'black',
         borderWidth:3,
         padding:10,
-        borderRadius:10
+        borderRadius:10,
     },
     grid:{
         fontSize:20,
@@ -80,6 +80,7 @@ export default styles = StyleSheet.create({
         padding:50,
         borderRadius:20,
         elevation:10,
+        margin:10
 
     
 
