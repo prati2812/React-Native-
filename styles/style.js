@@ -89,7 +89,18 @@ export default styles = StyleSheet.create({
         fontSize:20,
         margin:10,
         color:'black',
-    }
+    },
+    textInputStyle: {
+        height: 40,
+        borderWidth: 1,
+        paddingLeft: 20,
+        borderColor:'white',
+        backgroundColor: 'white',
+        borderRadius:10,
+        elevation:10,
+        marginTop:15,
+        padding:10
+      },
      
 });
 

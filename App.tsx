@@ -5,7 +5,29 @@ import style from './styles/style';
 
 const App = () => {
 
-  const [data,setData] = useState(''); 
+
+  const  [search , setSearch] = useState('');
+  const [filterdData , setFiteredText] = useState([]);
+  const [data,setData] = useState([]); 
+ 
+
+  const searchFilterFunction = (text) =>{
+      if(text){
+         const newData = data.filter((item)=>{
+             const itemData = item.title ? item.title.toUpperCase()
+             : ''.toUpperCase();
+           const textData = text.toUpperCase();
+           return itemData.indexOf(textData) > -1;
+         })
+
+         setFiteredText(newData);
+         setSearch(text);
+      }
+      else{
+         setFiteredText(data);
+         setSearch(text);
+      }   
+  } 
 
 
   const getData = async () => {
@@ -20,6 +42,7 @@ const App = () => {
     }
  }
 
+
  useEffect(()=> {
     getData(); 
  }, []);
@@ -27,20 +50,43 @@ const App = () => {
 
     return (
       <View style={{flex: 1}}>
+        <View style= {{marginLeft:10 , marginRight:10 , borderRadius:10}}>
+        <TextInput
+          style={style.textInputStyle}
+          onChangeText={(text) => searchFilterFunction(text)}
+          value={search}
+          underlineColorAndroid="transparent"
+          placeholder="Search Here"
+        />
+        </View>
         {
-          data.length ? 
-          <FlatList
-            data={data}
-            renderItem={({item}) => (
-              <View style={style.modelView}>
-                <Text style={{fontSize: 20}}>UserId: {item.userId}</Text>
-                <Text style={{fontSize: 20}}>Id: {item.id}</Text>
-                <Text style={{fontSize: 20}}>Title:  {item.title}</Text>
-                <Text style={{fontSize: 20}}>Body:  {item.body}</Text>
-              </View>
-            )}
-          />
-         : null
+
+
+             filterdData.length  > 0 ?
+             <FlatList
+                 data={filterdData}
+                 renderItem={({item}) => (
+                   <View style={style.modelView}>
+                     <Text style={{fontSize: 20}}>UserId: {item.userId}</Text>
+                     <Text style={{fontSize: 20}}>Id: {item.id}</Text>
+                     <Text style={{fontSize: 20}}>Title:  {item.title}</Text>
+                     <Text style={{fontSize: 20}}>Body:  {item.body}</Text>
+                   </View>
+                 )}
+              /> :
+              <FlatList
+                 data={data}
+                 renderItem={({item}) => (
+                   <View style={style.modelView}>
+                     <Text style={{fontSize: 20}}>UserId: {item.userId}</Text>
+                     <Text style={{fontSize: 20}}>Id: {item.id}</Text>
+                     <Text style={{fontSize: 20}}>Title:  {item.title}</Text>
+                     <Text style={{fontSize: 20}}>Body:  {item.body}</Text>
+                   </View>
+                 )}
+              />
+
+              
         }
       </View>
     );  
