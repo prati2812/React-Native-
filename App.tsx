@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Button, TextInput, FlatList} from 'react-native';
+import { Text, View, StyleSheet, Button, TextInput, FlatList, Modal} from 'react-native';
 import style from './styles/style';
 
 
@@ -14,8 +14,9 @@ const App = () => {
   const [nameError , setNameError] = useState(false);
   const [emailError , setEmailError] = useState(false);
 
-  
-
+  const [display , setDisplay] = useState(false);
+  const [selectedUser , setSelectedUser] = useState([]);
+ 
   const deleteData = async (id) => {
     const url = 'http://10.0.2.2:3000/users/';
     
@@ -83,47 +84,118 @@ const App = () => {
       headers:{
         'Content-Type' : 'application/json'
       }
-    })
+    });
     
     response = await response.json();
     setData(response);
- } 
+ }
 
+ const updateUser = async (val) => {
+     setDisplay(true);
+     setSelectedUser(val);
+ }
 
- useEffect(()=> {
-    getData();
- });
+useEffect(()=> {
+  getData();
+});
 
 
     return (
       <View style={{flex: 1}}>
-           <Text style={{textAlign:'center' , fontSize:30}}>Form</Text> 
-           <TextInput placeholder='Enter your name' style={style.item} onChangeText={(text) => setName(text)} value={name}/>
-           {
-              nameError ? <Text style={style.error}>name is required</Text> : null
-           } 
-           <TextInput placeholder='Enter your email' style={style.item} onChangeText={(text) => setEmail(text)} value={email} />
-           {
-                email.length && emailError ?  <Text style={style.error}>please enter valid email</Text> 
-                            : emailError ?  
-                            <Text style={style.error}>email is required</Text>
-                            : null
-           }
-           <Button  title='Save Data' onPress={() => saveData()}/>
-           {
-              data.length ? 
-                 data.map((item) => <View style={style.item}>
-                         <Text>{item.name}</Text>
-                         <Text>{item.email}</Text>
-                         <Button title='Delete' onPress={() => deleteData(item.id)}/>
-                  </View>)
-                : <View style={{flex:1, marginTop:10}}><Text style={{textAlign:'center'}}>No Data Found</Text></View>
-           }
+        <Text style={{textAlign: 'center', fontSize: 30}}>Form</Text>
+        <TextInput
+          placeholder="Enter your name"
+          style={style.item}
+          onChangeText={text => setName(text)}
+          value={name}
+        />
+        {nameError ? <Text style={style.error}>name is required</Text> : null}
+        <TextInput
+          placeholder="Enter your email"
+          style={style.item}
+          onChangeText={text => setEmail(text)}
+          value={email}
+          defaultValue={email}
+        />
+        {email.length && emailError ? (
+          <Text style={style.error}>please enter valid email</Text>
+        ) : emailError ? (
+          <Text style={style.error}>email is required</Text>
+        ) : null}
+        <Button title="Save Data" onPress={() => saveData()} />
+        {
+           data.length ? 
+                data.map((item) => <View style={style.item}>
+                        <Text>{item.name}</Text>
+                        <Text>{item.email}</Text>
+                        <View>
+                             <Button title='Delete' onPress={() => deleteData(item.id)}/>    
+                        </View>
+                        <View style={{marginTop:10}}>
+                           <Button title='Update' onPress={() => updateUser(item)} />
+                        </View>
+                         
+                </View>)
+                : null              
+        }
+        <Modal transparent={true} visible={display} animationType='slide'>  
+            <UpdateForm  selectedUser={selectedUser} setDisplay={setDisplay}/>
+        </Modal>
+        
       </View>
-    )  
+    );  
  
 }
 
+
+const UpdateForm = (props) => {
+    
+    const [name , setName] = useState('');
+    const [email, setEmail] = useState('');
+
+
+
+    const updateUser = async () => {
+         const data1 = {"name" : name , "email": email};
+         const url = 'http://10.0.2.2:3000/users/';
+         let response  = await fetch(url+props.selectedUser.id , {
+            method:'Put' ,
+            headers:{
+               'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify(data1)
+         })
+         
+        response = await response.json();
+             
+        if(response){
+           console.warn("Data updated");
+           props.setDisplay(false);
+           
+        }
+        
+    }
+
+  
+    useEffect(() => {
+       if(props.selectedUser){
+         setName(props.selectedUser.name);
+         setEmail(props.selectedUser.email);
+       }
+    } , [props.selectedUser]) 
+    
+     return(
+         <View style={style.centerView}>
+             <View style={style.modelView}>
+              <TextInput placeholder='Enter your name' style={style.item} value={name} onChangeText={(text) => setName(text)}/>
+              <TextInput placeholder='Enter your email' style={style.item} value={email} onChangeText={(text) => setEmail(text)}/>
+              <View style={{marginTop:5, marginBottom:10}}>
+                   <Button title='Update Data' onPress={() => updateUser()}/>
+              </View>  
+              <Button title='Close' onPress={()=> props.setDisplay(false)}/>
+            </View> 
+         </View>)
+}
 
 
 export default App;

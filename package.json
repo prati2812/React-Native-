@@ -15,6 +15,7 @@
     "@react-navigation/material-top-tabs": "^6.6.10",
     "@react-navigation/native": "^6.1.14",
     "@react-navigation/native-stack": "^6.9.22",
+    "json-server": "^1.0.0-alpha.23",
     "react": "18.2.0",
     "react-native": "0.73.5",
     "react-native-drawer-layout": "^3.2.2",

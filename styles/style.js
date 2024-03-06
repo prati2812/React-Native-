@@ -15,6 +15,10 @@ export default styles = StyleSheet.create({
         padding:10,
         borderRadius:10,
     },
+    error:{
+       marginLeft:11,
+       color:'red' 
+    },
     grid:{
         fontSize:20,
         borderColor:'black',
@@ -77,13 +81,10 @@ export default styles = StyleSheet.create({
     },
     modelView:{
         backgroundColor:'white',
-        padding:50,
+        padding:30,
         borderRadius:20,
         elevation:10,
         margin:10
-
-    
-
     },
     modalText:{
         fontSize:20,
