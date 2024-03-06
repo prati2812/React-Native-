@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Button, TextInput, FlatList, Modal} from 'react-native';
+import { Text, View, StyleSheet, Button, TextInput, FlatList, Modal, ScrollView} from 'react-native';
 import style from './styles/style';
 
 
@@ -95,9 +95,24 @@ const App = () => {
      setSelectedUser(val);
  }
 
-useEffect(()=> {
-  getData();
-});
+
+ const searchData = async (item) => {
+   const url = `http://10.0.2.2:3000/users?q=${item}`;
+   let respone  = await fetch(url);
+  
+   respone = await respone.json();
+   if(respone){
+     setData(respone);
+   }else{
+       getData();
+   }
+   
+  
+ }
+
+useEffect(() => {
+    getData();
+},[]);
 
 
     return (
@@ -123,9 +138,19 @@ useEffect(()=> {
           <Text style={style.error}>email is required</Text>
         ) : null}
         <Button title="Save Data" onPress={() => saveData()} />
+        <View style= {{marginLeft:10 , marginRight:10 , borderRadius:10}}>
+          <TextInput
+              style={style.textInputStyle}
+              underlineColorAndroid="transparent"
+              placeholder="Search Here"
+              onChangeText={(item) => searchData(item)}
+          />
+        </View> 
+        <ScrollView>
         {
            data.length ? 
-                data.map((item) => <View style={style.item}>
+                data.map((item) => 
+                      <View style={style.item}>
                         <Text>{item.name}</Text>
                         <Text>{item.email}</Text>
                         <View>
@@ -134,12 +159,15 @@ useEffect(()=> {
                         <View style={{marginTop:10}}>
                            <Button title='Update' onPress={() => updateUser(item)} />
                         </View>
-                         
-                </View>)
+                      
+                        </View> 
+                      )
                 : null              
-        }
+        }     
+        </ScrollView>
+        
         <Modal transparent={true} visible={display} animationType='slide'>  
-            <UpdateForm  selectedUser={selectedUser} setDisplay={setDisplay}/>
+            <UpdateForm  selectedUser={selectedUser} setDisplay={setDisplay} getData={getData}/>
         </Modal>
         
       </View>
@@ -182,7 +210,11 @@ const UpdateForm = (props) => {
          setName(props.selectedUser.name);
          setEmail(props.selectedUser.email);
        }
-    } , [props.selectedUser]) 
+    } , [props.selectedUser])
+    
+    useEffect(() => {
+         props.getData();  
+    }) 
     
      return(
          <View style={style.centerView}>
