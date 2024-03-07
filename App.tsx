@@ -13,18 +13,14 @@ const App = () => {
 
 
    const login = async () => {
-      let user = await signInWithEmailAndPassword(auth , email , password);
+      let user = await createUserWithEmailAndPassword(auth , email , password);
       if(user){
           console.warn(user);
           
       }
    }
 
-   const logout = async () => {
-      let logout = await signOut(auth);
-      console.warn(logout);
-      
-   }
+   
 
    return(
       <View style={{flex:1}}>
@@ -50,9 +46,7 @@ const App = () => {
                 <Button title='Sign Up' onPress={() => login()}/>
             </View>    
 
-            <View style={{marginLeft:20, marginRight:20, marginTop:15}}>
-                <Button title='Logout' onPress={() => logout()}/>
-            </View>  
+           
 
          
       </View>
