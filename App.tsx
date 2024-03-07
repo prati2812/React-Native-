@@ -13,9 +13,9 @@ const App = () => {
 
 
    const login = async () => {
-      let user = await createUserWithEmailAndPassword(auth , email , password);
+      let user = await signInWithEmailAndPassword(auth , email , password);
       if(user){
-          console.warn(user);
+          ToastAndroid.show('Login Successfully' , ToastAndroid.LONG);
           
       }
    }
@@ -43,7 +43,7 @@ const App = () => {
              />
 
             <View style={{marginLeft:20, marginRight:20, marginTop:15}}>
-                <Button title='Sign Up' onPress={() => login()}/>
+                <Button title='Sign in' onPress={() => login()}/>
             </View>    
 
            
