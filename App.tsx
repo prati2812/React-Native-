@@ -9,19 +9,23 @@ const App = () => {
  
 
    const requestCameraPermission = async () => {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.CAMERA
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('You can use camera');
-        } else {
-            console.log('permission denied');
+     
+      
+       const granted = await PermissionsAndroid.requestMultiple(['android.permission.CAMERA' , 
+                         'android.permission.READ_CONTACTS',
+                         'android.permission.READ_SMS']);
+       if(granted[PermissionsAndroid.PERMISSIONS.CAMERA] === PermissionsAndroid.RESULTS.GRANTED && 
+          granted[PermissionsAndroid.PERMISSIONS.READ_CONTACTS] === PermissionsAndroid.RESULTS.GRANTED &&
+          granted[PermissionsAndroid.PERMISSIONS.READ_SMS] === PermissionsAndroid.RESULTS.GRANTED){
+
+            console.log("allowed");
             
-        }
-      } catch (err) {
-        console.warn(err);
-      }
+       }
+       else{
+           
+          console.log("dfgyuh");
+          
+       }                  
     };
 
    return(
