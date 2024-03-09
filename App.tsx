@@ -1,37 +1,56 @@
 import React, {useEffect, useState} from 'react';
+import { StyleSheet } from 'react-native';
+import { Alert, Pressable } from 'react-native';
 import { View  , Text, FlatList} from 'react-native';
 
 const App = () => {
 
-   const data = [
-      {id: 1, name: 'John', email: 'john@gmail.com'},
-      {id: 2, name: 'Bob', email: 'bob@gmail.com'},
-      {id: 3, name: 'Mei', email: 'mei@gmail.com'},
-      {id: 4, name: 'Steve', email: 'steve@gmail.com'}
-  ]
+   const displayAlert = () => {
+      Alert.alert('warning');
+   }
 
 
-  const item = ({item}) => (  
-       <View style={{flexDirection:'row'}}>
-               <View style={{ width: 50, backgroundColor: 'lightyellow'}}>
-                     <Text>{item.id}</Text>
-               </View>
-               <View style={{ width: 300, backgroundColor: 'lightyellow'}}>
-                     <Text>{item.name}</Text>
-               </View>
-               <View style={{ width: 400, backgroundColor: 'lightyellow'}}>
-                     <Text>{item.email}</Text>
-               </View>
-       </View>
-  )
- 
    return(
-          <View style={{flex:1, justifyContent:'center' , alignItems:'center'}}>
-                <FlatList renderItem={item} data={data} keyExtractor={item => item.id.toString()}/>
-          </View>  
-   )
+          <View style={styles.container}>
+               <Fab onPress={displayAlert} title="+"/>
+          </View>     
+   )  
 
 }
 
+
+const Fab = (props) => {
+   return(
+       <View style={styles.fabContainer}>
+            <Pressable  onPress={props.onPress}>
+                    <Text style={styles.fabTxt}>{props.title}</Text>
+            </Pressable>   
+
+       </View>
+   )
+}
+
+const styles = StyleSheet.create({ 
+   container: { 
+       flex: 1, 
+       backgroundColor: "#fff", 
+   }, 
+   fabContainer:{
+      justifyContent: "center", 
+      alignItems: "center", 
+      borderRadius: 100, 
+      position: "absolute", 
+      bottom: 70, 
+      right: 40, 
+      backgroundColor: "#26653A", 
+      paddingHorizontal: 20, 
+      paddingVertical: 10, 
+   },
+   fabTxt:{
+      color:'white',
+      fontSize:20
+   }
+
+}); 
 
 export default App;
