@@ -1,33 +1,33 @@
 import React, {useEffect, useState} from 'react';
 import { StyleSheet } from 'react-native';
-import { Alert, Pressable } from 'react-native';
-import { View  , Text, FlatList} from 'react-native';
+import { View  , Text, Button} from 'react-native';
+import axios from 'axios';
 
 const App = () => {
 
-   const displayAlert = () => {
-      Alert.alert('warning');
+   const [data, setData] = useState('');
+
+   const displayAdvice = async () => {
+      await axios.get('http://api.adviceslip.com/advice/2')
+              .then((res) => {
+                  setData(res.data.slip.advice);
+              })
+              .catch((e) => {
+                  console.log(e);
+              })
    }
 
 
    return(
           <View style={styles.container}>
-               <Fab onPress={displayAlert} title="+"/>
+                <Button  title='Get Advice' onPress={displayAdvice}/>
+                {
+                   data.length ?
+                          <Text>{data}</Text> : null
+                }
           </View>     
    )  
 
-}
-
-
-const Fab = (props) => {
-   return(
-       <View style={styles.fabContainer}>
-            <Pressable  onPress={props.onPress}>
-                    <Text style={styles.fabTxt}>{props.title}</Text>
-            </Pressable>   
-
-       </View>
-   )
 }
 
 const styles = StyleSheet.create({ 
