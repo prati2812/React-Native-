@@ -1,60 +1,58 @@
 import React, { useEffect, useState } from 'react';
-import { View  , Text,  PermissionsAndroid, Platform} from 'react-native';
-import Contact from 'react-native-contacts';
+import { View  , Button, PermissionsAndroid, Platform, ToastAndroid} from 'react-native';
+import notifee from '@notifee/react-native';
+
 
 
 const App = () => {
 
-   const [contacts, setContacts] = useState([]);
+    
+ 
+    const handle = async () => {
 
-   useEffect(() => {
-     fetchContacts();
-   }, []);
- 
-   const fetchContacts = async () => {
-     try {
-       if (Platform.OS === 'android') {
-         const granted = await PermissionsAndroid.request(
-           PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-           {
-             title: 'Contacts Permission',
-             message: 'This app needs access to your contacts',
-             buttonNeutral: 'Ask Me Later',
-             buttonNegative: 'Cancel',
-             buttonPositive: 'OK',
-           }
-         );
-         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-              getContactList(); 
-         } else {
-           console.log('Contacts permission denied');
-         }
-       } 
-     } catch (error) {
-       console.error('Error fetching contacts:', error);
-     }
-   };
- 
-   
-   const getContactList = () => {
-       Contact.getAll().then((contacts) => {
-             setContacts(contacts);
-             console.warn(contacts);
-             
-       })
-       .catch((e) => {
-           console.log(e);
-           
-       });
-   }
 
- 
+      if(Platform.OS == 'android'){
+          try{
+              PermissionsAndroid.check('android.permission.POST_NOTIFICATIONS')
+               .then(async response => {
+                    if(!response){
+                      const granted = PermissionsAndroid.request('android.permission.POST_NOTIFICATIONS');
+                      if(await granted != PermissionsAndroid.RESULTS.GRANTED){
+                              ToastAndroid.show('Permission not granted' , ToastAndroid.SHORT);   
+                      }
+                    }
+               })
+          }
+          catch(e){
+               ToastAndroid.show('Please try again later' , ToastAndroid.SHORT);
+          }
+      }
+
+
+      const channelId = await notifee.createChannel({
+        id: 'default',
+        name: 'Default Channel',
+      });
+  
+      // Display a notification
+      await notifee.displayNotification({
+        title: 'Notification Title',
+        body: 'Main body content of the notification',
+        android: {
+          channelId,
+          pressAction: {
+            id: 'default',
+          },
+        },
+      });
+
+     
+    }
+
+
    return (
      <View>
-       <Text>Contact List:</Text>
-       {contacts.map((contact, index) => (
-         <Text key={index} style={{fontSize:20 , color:'black'}}>{contact?.phoneNumbers[0]?.number}</Text>
-       ))}
+         <Button title="press it" onPress={() => handle()}/>
      </View>
    );
 };  
